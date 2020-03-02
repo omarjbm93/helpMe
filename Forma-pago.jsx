@@ -10,6 +10,7 @@ import Transferencia from './Transferencia';
 import axios from 'axios';
 import Credito from '../Components/Modal/Credito';
 import Direcciones from '../Components/Modal/Direcciones'
+import Modalbutton from './Modal/Modal';
 
 let uri = '';
 let destructured = [];
@@ -46,7 +47,8 @@ class FormaPago extends React.Component {
             Enviar: '',
             product: {},
             address: {},
-            show: false
+            show: false,
+            showModal: false
         };
     }
 
@@ -69,6 +71,7 @@ class FormaPago extends React.Component {
     }
 
     valid() {
+
         if (!this.state.payer_email.includes('@')) {
             this.setState(
                 {payer_emailError: 'invalid'}
@@ -77,6 +80,7 @@ class FormaPago extends React.Component {
         else {
             return true
         }
+
     }
 
     submitHandler = e => {
@@ -110,7 +114,7 @@ class FormaPago extends React.Component {
                 console.log(error);
             });
 
-        this.setState({payer_emailError: ''})
+        this.setState({payer_emailError: ''});
 
         if (this.valid()) {
 
@@ -130,6 +134,10 @@ class FormaPago extends React.Component {
         this.setState({open: true});
     };
 
+    buttonModal = () => {
+        this.setState({showModal: true});
+    };
+
     changeHandler = e => {
         this.setState({[e.target.name]: e.target.value});
     };
@@ -145,12 +153,13 @@ class FormaPago extends React.Component {
         }
 
         return (
+
             <div className='container-fluid'>
-                <Direcciones ref={this.assignRef} cb={this.changeInfo}/>
                 <div className="row-fluid">
                     <div className='col-lg-9 col-md-10 col-sm-12 contenedor '>
                         <div className="izquierda col-sm-12 col-md-12 col-lg-7 ">
                             <p className='titulo'>Elige la forma de pago</p>
+                            <Direcciones ref={this.assignRef} cb={this.changeInfo}/>
                             <Accordion>
                                 <div className=''>
                                     <Card>
@@ -261,8 +270,6 @@ class FormaPago extends React.Component {
                                                                         <div className="input-group-append">
                                                                         </div>
                                                                     </div>
-
-
                                                                     <div className="input-group mt-2">
                                                                         <input className="form-control" type="number"
                                                                                name="payer_document_number"
@@ -272,7 +279,6 @@ class FormaPago extends React.Component {
                                                                         <div className="input-group-append">
                                                                         </div>
                                                                     </div>
-
                                                                     <div className="input-group mt-2">
                                                                         <input className="form-control" type="text"
                                                                                name="payer_email" value={payer_email}
@@ -285,7 +291,6 @@ class FormaPago extends React.Component {
                                                                         <div className="input-group-append">
                                                                         </div>
                                                                     </div>
-
                                                                     <div className="input-group mt-2">
                                                                         <input className="form-control" type="number"
                                                                                name='payer_phone' value={payer_phone}
@@ -294,7 +299,6 @@ class FormaPago extends React.Component {
                                                                         <div className="input-group-append">
                                                                         </div>
                                                                     </div>
-
                                                                     <div className="input-group mt-2">
                                                                         <input className="form-control" type="text"
                                                                                name='payer_city' value={payer_city}
@@ -303,13 +307,13 @@ class FormaPago extends React.Component {
                                                                         <div className="input-group-append">
                                                                         </div>
                                                                     </div>
-
                                                                     <div className="input-group mt-2">
                                                                         <input className="form-control" type="text"
                                                                                name='payer_addr1' value={payer_addr1}
                                                                                placeholder="Dirección-1*" required
                                                                                onChange={this.changeHandler}/>
                                                                         <div className="input-group-append">
+
                                                                             }
                                                                         </div>
                                                                     </div>
@@ -344,7 +348,6 @@ class FormaPago extends React.Component {
                                                         </div>
                                                     </Card.Body>
                                                 </div>
-
                                                 <div className='col-lg-4 col-md-5 col-sm-2  n'>
                                                     <img alt='' className='img-fluid ' src={img}/>
                                                 </div>
@@ -372,14 +375,16 @@ class FormaPago extends React.Component {
                                     <p>Ciudad: {this.state.city}</p>
                                 </div>
                             </div>
-                            <button type="button" className="btn btn-outline-danger btn-block mt-3">
-                                <a href="javascript:location.reload();">Cambiar Direccion </a>
+                            <button type="button" onClick={this.buttonModal}
+                                    className="btn btn-outline-danger btn-block mt-3">
+                                Cambiar Direccion
                             </button>
+                            {this.state.showModal === false ? '' :
+                                <Direcciones ref={this.assignRef} cb={this.changeInfo}/>}
                         </div>
                     </div>
                 </div>
             </div>
-
         )
     }
 }
